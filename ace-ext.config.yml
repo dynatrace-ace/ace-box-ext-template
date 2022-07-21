@@ -1,0 +1,7 @@
+---
+# Tooling
+tooling:
+  jenkins: true
+  dashboard: true
+# Default overrides
+dashboard_password: dyna

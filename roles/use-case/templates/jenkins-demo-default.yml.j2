@@ -28,6 +28,10 @@ controller:
             }
         - script: >
             pipelineJob('demo-default/2. Deploy') {
+              environmentVariables {
+                env('GIT_ORG_DEMO', '{{ git_org_demo }}')
+                env('GIT_REPO_DEMO', '{{ git_repo_demo }}')
+              }
               parameters {
                 stringParam('APP_NAME', 'simplenodeservice', 'The name of the service to deploy.')
                 stringParam('TAG_STAGING', '', 'The image of the service to deploy.')

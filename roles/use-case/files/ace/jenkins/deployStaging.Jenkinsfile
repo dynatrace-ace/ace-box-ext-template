@@ -34,19 +34,19 @@ pipeline {
                     env.DT_CUSTOM_PROP = readMetaData() + " " + generateDynamicMetaData()
                     env.DT_TAGS = readTags() + " " + generateDynamicTags()
                 }
-                container('git') {
-                    withCredentials([usernamePassword(credentialsId: 'git-creds-ace', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                        sh "git config --global user.email ${env.GITHUB_USER_EMAIL}"
-                        sh "git clone ${env.GIT_PROTOCOL}://${GIT_USERNAME}:${GIT_PASSWORD}@${env.GIT_DOMAIN}/${env.GIT_ORG_DEMO}/${env.GIT_REPO_DEMO}"
-                        sh "cd ${env.GIT_REPO_DEMO}/ && sed 's#value: \"DT_CUSTOM_PROP_PLACEHOLDER\".*#value: \"${env.DT_CUSTOM_PROP}\"#' manifests/${env.APP_NAME}.yml > manifests/staging/${env.APP_NAME}.yml"
-                        sh "cd ${env.GIT_REPO_DEMO}/ && sed -i 's#value: \"DT_TAGS_PLACEHOLDER\".*#value: \"${env.DT_TAGS}\"#' manifests/staging/${env.APP_NAME}.yml"
-                        sh "cd ${env.GIT_REPO_DEMO}/ && sed -i 's#value: \"NAMESPACE_PLACEHOLDER\".*#value: \"staging\"#' manifests/staging/${env.APP_NAME}.yml"
-                        sh "cd ${env.GIT_REPO_DEMO}/ && sed -i 's#image: .*#image: ${env.TAG_STAGING}#' manifests/staging/${env.APP_NAME}.yml"
-                        sh "cd ${env.GIT_REPO_DEMO}/ && git add manifests/staging/${env.APP_NAME}.yml && git commit -m 'Update ${env.APP_NAME} version ${env.BUILD}'"
-                        sh "cd ${env.GIT_REPO_DEMO}/ && git push ${env.GIT_PROTOCOL}://${GIT_USERNAME}:${GIT_PASSWORD}@${env.GIT_DOMAIN}/${env.GIT_ORG_DEMO}/${env.GIT_REPO_DEMO}"
-                        sh "rm -rf ${env.GIT_REPO_DEMO}"
-                    }
-                }
+                // container('git') {
+                //     withCredentials([usernamePassword(credentialsId: 'git-creds-ace', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                //         sh "git config --global user.email ${env.GITHUB_USER_EMAIL}"
+                //         sh "git clone ${env.GIT_PROTOCOL}://${GIT_USERNAME}:${GIT_PASSWORD}@${env.GIT_DOMAIN}/${env.GIT_ORG_DEMO}/${env.GIT_REPO_DEMO}"
+                //         sh "cd ${env.GIT_REPO_DEMO}/ && sed 's#value: \"DT_CUSTOM_PROP_PLACEHOLDER\".*#value: \"${env.DT_CUSTOM_PROP}\"#' manifests/${env.APP_NAME}.yml > manifests/staging/${env.APP_NAME}.yml"
+                //         sh "cd ${env.GIT_REPO_DEMO}/ && sed -i 's#value: \"DT_TAGS_PLACEHOLDER\".*#value: \"${env.DT_TAGS}\"#' manifests/staging/${env.APP_NAME}.yml"
+                //         sh "cd ${env.GIT_REPO_DEMO}/ && sed -i 's#value: \"NAMESPACE_PLACEHOLDER\".*#value: \"staging\"#' manifests/staging/${env.APP_NAME}.yml"
+                //         sh "cd ${env.GIT_REPO_DEMO}/ && sed -i 's#image: .*#image: ${env.TAG_STAGING}#' manifests/staging/${env.APP_NAME}.yml"
+                //         sh "cd ${env.GIT_REPO_DEMO}/ && git add manifests/staging/${env.APP_NAME}.yml && git commit -m 'Update ${env.APP_NAME} version ${env.BUILD}'"
+                //         sh "cd ${env.GIT_REPO_DEMO}/ && git push ${env.GIT_PROTOCOL}://${GIT_USERNAME}:${GIT_PASSWORD}@${env.GIT_DOMAIN}/${env.GIT_ORG_DEMO}/${env.GIT_REPO_DEMO}"
+                //         sh "rm -rf ${env.GIT_REPO_DEMO}"
+                //     }
+                // }
             }
         }     
         stage('Deploy via Helm') {

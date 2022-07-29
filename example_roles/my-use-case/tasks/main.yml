@@ -1,0 +1,16 @@
+---
+- debug:
+    msg: "Hello from {{ my_ext_use_case_name }}!"
+
+# 
+# microk8s is a curated role provided by the ACE-Box
+# Curated roles can be sourced from within your use case.
+# 
+- include_role: "microk8s"
+
+# 
+# All other roles provided in an external use case are 
+# synched with the ACE-Box Ansible directory and can
+# therefore be sourced just like curated roles.
+# 
+- include_role: "another-role"

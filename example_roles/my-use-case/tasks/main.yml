@@ -1,4 +1,12 @@
 ---
+# 
+# my-use-case is the only required role.
+# However, in addition to tasks in my-use-case, 
+# additional roles can be included.
+# Such roles can either be provided as part the
+# external repo or included from a curated list
+# of ACE-Box default roles.
+# 
 - debug:
     msg: "Hello from {{ my_ext_use_case_name }}!"
 

@@ -1,4 +1,0 @@
-# To delete configs, reference them here.
-
-delete: 
-    - "management-zone/management-zone-prod"

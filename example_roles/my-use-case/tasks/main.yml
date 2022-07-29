@@ -11,7 +11,7 @@
     msg: "Hello from {{ my_ext_use_case_name }}!"
 
 # 
-# microk8s and dt-oneagent are curated roles provided by 
+# microk8s, dt-oneagent and jenkins are curated roles provided by 
 # the ACE-Box.
 # Curated roles can be sourced from within your use case.
 # 
@@ -20,6 +20,13 @@
 
 - include_role:
     name: "dt-oneagent"
+
+# Include use case specific Jenkins values
+- set_fact:
+    include_jenkins_value_file: "{{ role_path }}/templates/my-use-case-jenkins-jobs.yml.j2"
+
+- include_role:
+    name: "jenkins"
 
 # 
 # All other roles provided in an external use case are 

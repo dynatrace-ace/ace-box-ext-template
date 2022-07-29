@@ -28,3 +28,9 @@ The `my-use-case` role can itself source other Ansible roles. Such roles can eit
 All default variables can be overriden for an external use case. This can happen in two ways:
 - A `defaults/main.yml` is created and added to the respective role directory (e.g. `roles/jenkins/defaults/main.yml`). All external role directories and files are synced with the ACE-Box. The external `main.yml` file would therefore override any ACE-Box default `main.yml`. Attention: This requires that all values in the original `main.yml` are also set in the external `main.yml`.
 - A `ace-ext.config.yml` file is added to the repo root. All variables within this file will override the variables set by the ACE-Box. E.g. `dashboard_password: "supersecret"` will override the default `dashboard_password` set by the ACE-Box.
+
+## Jenkins override (optional)
+
+For most tools, configurations can be applied after they are installed. No so much for Jenkins. Jenkins requires all configuration being present the moment it's installed.
+
+In case your use case requires Jenkins configurations (folders, pipelines, jobs, ...), a special variable `include_jenkins_value_file` can be set that allows including additional configuration. The value of this variable must be a path to a valid Jenkins Helm chart [values file](https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/values.yaml). An example of this procedure can be found in the [`demo-default` use case](https://github.com/Dynatrace/ace-box/blob/dev/user-skel/ansible/roles/demo-default/tasks/main.yml).

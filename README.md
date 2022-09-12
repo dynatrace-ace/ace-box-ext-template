@@ -35,6 +35,10 @@ For most tools, configurations can be applied after they are installed. No so mu
 
 In case your use case requires Jenkins configurations (folders, pipelines, jobs, ...), a special variable `include_jenkins_value_file` can be set that allows including additional configuration. The value of this variable must be a path to a valid Jenkins Helm chart [values file](https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/values.yaml). An example of this procedure can be found in the [`demo-default` use case](https://github.com/Dynatrace/ace-box/blob/dev/user-skel/ansible/roles/demo-default/tasks/main.yml).
 
+## Dashboard override (optional)
+
+In case use case specific information shall be shown on the dashboard, there's an option to add custom configuration. This way, use case specific credentials, links to tools, previews and links to guides can be added. An example for custom configuration can be found in the [examples](/example_roles/my-use-case/templates/my-use-case-dashboard.yml.j2).
+
 ## DTU provisioning
 
 When an ACE-Box with external use case is provisioned by the DTU team, make sure to grant read access to the Github [ace-box-dtu](https://github.com/orgs/dynatrace-ace/teams/ace-box-dtu) team. This allows them to source the use case during their provisioning process.

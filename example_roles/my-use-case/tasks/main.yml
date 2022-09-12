@@ -34,7 +34,7 @@
 
 # Include and template use case specific values before installing Dashboard
 - set_fact:
-    include_dashboard_value_file: "{{ role_path }}/templates/demo-quality-gates-jenkins-dashboard.yml.j2"
+    include_dashboard_value_file: "{{ role_path }}/templates/my-use-case-dashboard.yml.j2"
 
 - include_role:
     name: dashboard

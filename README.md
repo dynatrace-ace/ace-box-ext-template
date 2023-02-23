@@ -27,7 +27,7 @@ The `my-use-case` role can itself source other Ansible roles. Such roles can eit
 
 All default variables can be overriden for an external use case. This can happen in two ways:
 - A `defaults/main.yml` is created and added to the respective role directory (e.g. `roles/jenkins/defaults/main.yml`). All external role directories and files are synced with the ACE-Box. The external `main.yml` file would therefore override any ACE-Box default `main.yml`. Attention: This requires that all values in the original `main.yml` are also set in the external `main.yml`.
-- A `ace-ext.config.yml` file is added to the repo root. All variables within this file will override the variables set by the ACE-Box. E.g. `dashboard_password: "supersecret"` will override the default `dashboard_password` set by the ACE-Box.
+- A `ace-ext.config.yml` file is added to the repo root. All variables within this file will override the variables set by the ACE-Box. E.g. `my_var_override: foobar` will override the default `my_var_override` set by the ACE-Box.
 
 ## Jenkins override (optional)
 

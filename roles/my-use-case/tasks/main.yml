@@ -17,18 +17,6 @@
 - include_role:
     name: k3s
 
-- name: Install Helm
-  become: true
-  become_user: root
-  community.general.snap:
-    name:
-    - helm
-    classic: yes
-
-- include_role:
-    name: k3s
-    tasks_from: restart
-
 ###########################
 ######## EasyTrade ########
 ###########################
@@ -41,43 +29,43 @@
     easytrade_owner: "easytrade-hot-devs"
     easytrade_ingress_class: "traefik"
 
-- name: Template Easytrade Ingress Patch
-  template:
-    src: "{{ role_path }}/templates/easytrade-ingress.yml.j2"
-    dest: "{{ role_path }}/files/kustomize/overlays/app/easytrade-ingress.yml"
-    owner: "{{ ace_box_user }}"
-    group: "{{ ace_box_user }}"
-    mode: '0644'
-  vars:
-    easytrade_domain: "easytrade-app.{{ ingress_domain }}"
+# - name: Template Easytrade Ingress Patch
+#   template:
+#     src: "{{ role_path }}/templates/easytrade-ingress.yml.j2"
+#     dest: "{{ role_path }}/files/kustomize/overlays/app/easytrade-ingress.yml"
+#     owner: "{{ ace_box_user }}"
+#     group: "{{ ace_box_user }}"
+#     mode: '0644'
+#   vars:
+#     easytrade_domain: "easytrade-app.{{ ingress_domain }}"
 
 ###########################
 ######## Dynatrace ########
 ###########################
-- name: Helm install operator
-  shell: |
-    helm install dynatrace-operator oci://public.ecr.aws/dynatrace/dynatrace-operator \
-    --set "imageRef.repository=gcr.io/dynatrace-marketplace-prod/dynatrace-operator" \
-    --create-namespace \
-    --namespace dynatrace \
-    --atomic \
-    --version 1.3.0-rc.0
+# - name: Helm install operator
+#   shell: |
+#     helm install dynatrace-operator oci://public.ecr.aws/dynatrace/dynatrace-operator \
+#     --set "imageRef.repository=gcr.io/dynatrace-marketplace-prod/dynatrace-operator" \
+#     --create-namespace \
+#     --namespace dynatrace \
+#     --atomic \
+#     --version 1.3.0-rc.0
 
-#
-# Apply Dynakube
-#
-- name: Template Dynakube manifest
-  ansible.builtin.template:
-    src: "applicationMonitoring-new.yaml.j2"
-    dest: "{{ role_path }}/files/applicationMonitoring-new.yaml"
-    owner: "{{ ace_box_user }}"
-    group: "{{ ace_box_user }}"
-    mode: "0644"
-- name: Apply Dynakube manifest
-  kubernetes.core.k8s:
-    state: present
-    src: "{{ role_path }}/files/applicationMonitoring-new.yaml"
-  register: dynakube
-  retries: 10
-  delay: 10
-  until: dynakube is not failed
+# #
+# # Apply Dynakube
+# #
+# - name: Template Dynakube manifest
+#   ansible.builtin.template:
+#     src: "applicationMonitoring-new.yaml.j2"
+#     dest: "{{ role_path }}/files/applicationMonitoring-new.yaml"
+#     owner: "{{ ace_box_user }}"
+#     group: "{{ ace_box_user }}"
+#     mode: "0644"
+# - name: Apply Dynakube manifest
+#   kubernetes.core.k8s:
+#     state: present
+#     src: "{{ role_path }}/files/applicationMonitoring-new.yaml"
+#   register: dynakube
+#   retries: 10
+#   delay: 10
+#   until: dynakube is not failed

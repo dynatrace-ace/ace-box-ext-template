@@ -1,28 +1,6 @@
 # ace-box-ext-template
 
-The `ace-box-ext-template` provides a template structure and examples of how to create a custom [ACE-Box](https://github.com/Dynatrace/ace-box) use case.
-
-## Repository structure
-
-It's important that your external use case complies to a specific folder structure. Most importantly, a folder `roles` need to be available at the repository root that includes at least a `my-use-case` (literal, not renamed) folder.
-
-This `roles` folder and all of it's contents are synced with the ACE-Box's Ansible workdir. Ansible is used to provision use cases including external ones. Upon a successful content sync, Ansible tries to use this `my-use-case` folder as an Ansible role.
-
-An Ansible role is expected to have the following structure:
-
-```
-roles/
-  my-use-case/
-    defaults/
-      main.yml
-    tasks/
-      main.yml
-    ...
-```
-
-For more information, please see the [official Ansible documentation](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html).
-
-The `my-use-case` role can itself source other Ansible roles. Such roles can either be provided as part of the external repository or included from the ACE-Box default roles. A list of ACE-Box roles can be found [here](https://github.com/Dynatrace/ace-box#curated-roles). Please also see the `examples_roles` folder for examples.
+This external use case can be used as a template for building your own.
 
 ## Version and compatibility
 

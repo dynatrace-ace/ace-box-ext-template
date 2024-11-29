@@ -2,17 +2,12 @@
 - debug:
     msg: "Hello from your external use case!"
 
-# - include_role:
-#     name: k3s
+- include_role:
+    name: k3s
 
-# - name: Install dt operator
-#   include_role:
-#     name: dt-operator
+- name: Install dt operator
+  include_role:
+    name: dt-operator
 
-# - include_role:
-#     name: app-easytrade
-#   vars:
-#     easytrade_namespace: "easytrade-app"
-#     easytrade_domain: "easytrade-app.{{ ingress_domain }}"
-#     easytrade_deploy: true
-#     easytrade_owner: "easytrade-hot-devs"
+- include_role:
+    name: app-easytrade

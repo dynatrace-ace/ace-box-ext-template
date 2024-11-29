@@ -1,0 +1,65 @@
+# Copyright 2024 Dynatrace LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: third-party-service
+spec:
+  selector:
+    matchLabels:
+      app: third-party-service
+  template:
+    metadata:
+      labels:
+        app: third-party-service
+    spec:
+      containers:
+        - name: third-party-service
+          image: europe-docker.pkg.dev/dynatrace-demoability/docker/easytrade/third-party-service:d863a2e
+          ports:
+            - containerPort: 8080
+          env:
+            - name: CREDIT_CARD_ORDER_SERVICE_HOSTANDPORT
+              value: "credit-card-order-service:8080"
+            - name: PROXY_PREFIX
+              value: "third-party-service"
+            - name: COURIER_DELAY
+              value: "400"
+            - name: COURIER_RATE
+              value: "900"
+            - name: MANUFACTURE_DELAY
+              value: "500"
+            - name: MANUFACTURE_RATE
+              value: "900"
+          envFrom:
+            - configMapRef:
+                name: feature-flag-service-setup
+          resources:
+            requests:
+              cpu: 150m
+              memory: 100Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: third-party-service
+spec:
+  type: ClusterIP
+  selector:
+    app: third-party-service
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080

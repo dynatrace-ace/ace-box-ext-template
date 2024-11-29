@@ -1,0 +1,80 @@
+# Copyright 2024 Dynatrace LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - common
+  - environment/easytrade-ingress.yml
+
+patches:
+  - path: environment/kubernetes-labels-patch.yml
+    target:
+        kind: Deployment
+
+images:
+- name: europe-docker.pkg.dev/dynatrace-demoability/docker/easytrade/accountservice
+  newTag: "d863a2e"
+
+- name: europe-docker.pkg.dev/dynatrace-demoability/docker/easytrade/aggregatorservice
+  newTag: "d863a2e"
+
+- name: europe-docker.pkg.dev/dynatrace-demoability/docker/easytrade/broker-service
+  newTag: "d863a2e"
+
+- name: europe-docker.pkg.dev/dynatrace-demoability/docker/easytrade/calculationservice
+  newTag: "d863a2e"
+
+- name: europe-docker.pkg.dev/dynatrace-demoability/docker/easytrade/contentcreator
+  newTag: "d863a2e"
+
+- name: europe-docker.pkg.dev/dynatrace-demoability/docker/easytrade/credit-card-order-service
+  newTag: "d863a2e"
+
+- name: europe-docker.pkg.dev/dynatrace-demoability/docker/easytrade/db
+  newTag: "d863a2e"
+
+- name: europe-docker.pkg.dev/dynatrace-demoability/docker/easytrade/engine
+  newTag: "d863a2e"
+
+- name: europe-docker.pkg.dev/dynatrace-demoability/docker/easytrade/feature-flag-service
+  newTag: "d863a2e"
+
+- name: europe-docker.pkg.dev/dynatrace-demoability/docker/easytrade/frontend
+  newTag: "d863a2e"
+
+- name: europe-docker.pkg.dev/dynatrace-demoability/docker/easytrade/frontendreverseproxy
+  newTag: "d863a2e"
+
+- name: europe-docker.pkg.dev/dynatrace-demoability/docker/easytrade/loadgen
+  newTag: "d863a2e"
+
+- name: europe-docker.pkg.dev/dynatrace-demoability/docker/easytrade/loginservice
+  newTag: "d863a2e"
+
+- name: europe-docker.pkg.dev/dynatrace-demoability/docker/easytrade/manager
+  newTag: "d863a2e"
+
+- name: europe-docker.pkg.dev/dynatrace-demoability/docker/easytrade/offerservice
+  newTag: "d863a2e"
+
+- name: europe-docker.pkg.dev/dynatrace-demoability/docker/easytrade/pricing-service
+  newTag: "d863a2e"
+
+- name: europe-docker.pkg.dev/dynatrace-demoability/docker/easytrade/rabbitmq
+  newTag: "d863a2e"
+
+- name: europe-docker.pkg.dev/dynatrace-demoability/docker/easytrade/third-party-service
+  newTag: "d863a2e"

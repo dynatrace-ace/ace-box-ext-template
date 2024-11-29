@@ -1,0 +1,26 @@
+# Copyright 2024 Dynatrace LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: Ensure the easytrade namespace exists
+  kubernetes.core.k8s:
+    kind: Namespace
+    api_version: v1
+    name: "{{ easytrade_namespace }}"
+    state: present
+
+- name: Apply Kubernetes manifests using kubectl and Kustomize
+  ansible.builtin.shell:
+    cmd: kubectl apply -k "{{ role_path }}/files/kustomize/base" -n "{{ easytrade_namespace }}"
+  args:
+    executable: /bin/bash

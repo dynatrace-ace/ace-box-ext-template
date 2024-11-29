@@ -1,0 +1,66 @@
+# Copyright 2024 Dynatrace LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: credit-card-order-service
+spec:
+  selector:
+    matchLabels:
+      app: credit-card-order-service
+  template:
+    metadata:
+      labels:
+        app: credit-card-order-service
+    spec:
+      containers:
+        - name: credit-card-order-service
+          image: europe-docker.pkg.dev/dynatrace-demoability/docker/easytrade/credit-card-order-service:d863a2e
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: feature-flag-service-setup
+          env:
+            - name: PROXY_PREFIX
+              value: "credit-card-order-service"
+            - name: THIRD_PARTY_SERVICE_HOSTANDPORT
+              value: "third-party-service:8080"
+            - name: WORK_DELAY
+              value: "300"
+            - name: WORK_RATE
+              value: "900"
+            - name: MSSQL_CONNECTIONSTRING
+              valueFrom:
+                configMapKeyRef:
+                  name: connection-strings
+                  key: JAVA_CONNECTION_STRING
+          resources:
+            requests:
+              cpu: 150m
+              memory: 100Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: credit-card-order-service
+spec:
+  type: ClusterIP
+  selector:
+    app: credit-card-order-service
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080

@@ -1,0 +1,65 @@
+# Copyright 2024 Dynatrace LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+configs:
+  - id: easytrade-k8s-send-test-notification
+    config:
+      name: easytrade-k8s-send-test-notification
+      parameters:
+        slack_connection_id:
+          type: reference
+          project: config.slack-connections
+          configType: app:dynatrace.slack:connection
+          configId: slack-bot
+          property: id
+      template: easytrade-k8s-send-test-notification.json
+      skip: true
+    type:
+      automation:
+        resource: workflow
+  - id: easytrade-k8s-trigger-validation-cron
+    config:
+      name: easytrade-k8s-trigger-validation-cron
+      template: easytrade-k8s-trigger-validation-cron.json
+      skip: false
+    type:
+      automation:
+        resource: workflow
+  - id: easytrade-k8s-run-validation
+    config:
+      name: easytrade-k8s-run-validation
+      parameters:
+        easytrade_k8s_bizevents_id:
+          type: reference
+          project: easytrade-validation.srg
+          configType: app:dynatrace.site.reliability.guardian:guardians
+          configId: easytrade-k8s-bizevents
+          property: id
+        easytrade_k8s_bizevents_frontend_id:
+          type: reference
+          project: easytrade-validation.srg
+          configType: app:dynatrace.site.reliability.guardian:guardians
+          configId: easytrade-k8s-bizevents-frontend
+          property: id
+        easytrade_k8s_loadgen_visits_id:
+          type: reference
+          project: easytrade-validation.srg
+          configType: app:dynatrace.site.reliability.guardian:guardians
+          configId: easytrade-k8s-loadgen-visits
+          property: id
+      template: easytrade-k8s-run-validation.json
+      skip: false
+    type:
+      automation:
+        resource: workflow

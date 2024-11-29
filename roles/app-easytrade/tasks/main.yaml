@@ -1,0 +1,81 @@
+# Copyright 2024 Dynatrace LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: Set deployment strategy as a fact
+  set_fact:
+    manifest_strategy: "{{ manifest_strategy | default('static') }}"
+
+- name: Determine deployment strategy
+  block:
+    - name: Remove the existing directory if deployment strategy is fetch_latest
+      ansible.builtin.file:
+        path: "{{ role_path }}/files/easytrade"
+        state: absent
+
+    - name: Clone the Easytrade repository with the full contents of the latest commit on the default branch
+      ansible.builtin.git:
+        repo: 'https://github.com/Dynatrace/easytrade.git'
+        dest: "{{ role_path }}/files"
+        version: 'HEAD'  # Use the latest commit on the default branch
+        depth: 1
+      register: git_clone
+
+    - name: Template Easytrade Kustomization
+      template:
+        src: "{{ role_path }}/templates/kustomization-base.yml.j2"
+        dest: "{{ role_path }}/files/easytrade/kubernetes-manifests/kustomization.yml"
+        owner: "{{ ace_box_user }}"
+        group: "{{ ace_box_user }}"
+        mode: '0644'
+  when: manifest_strategy == 'fetch_latest'
+
+- name: Template Easytrade Kustomization
+  template:
+    src: "{{ role_path }}/templates/kustomization.yml.j2"
+    dest: "{{ role_path }}/files/kustomize/base/kustomization.yml"
+    owner: "{{ ace_box_user }}"
+    group: "{{ ace_box_user }}"
+    mode: '0644'
+
+- debug:
+    msg: "{{ingress_class}}"
+
+- debug:
+    msg: "{{easytrade_ingress_class}}"
+
+- debug:
+    msg: "{{role_path}}"
+
+- name: Template Easytrade Ingress Patch
+  template:
+    src: "{{ role_path }}/templates/easytrade-ingress.yml.j2"
+    dest: "{{ role_path }}/files/kustomize/base/environment/easytrade-ingress.yml"
+    owner: "{{ ace_box_user }}"
+    group: "{{ ace_box_user }}"
+    mode: '0644'
+
+- name: Template Easytrade Labels Patch
+  template:
+    src: "{{ role_path }}/templates/kubernetes-labels-patch.yml.j2"
+    dest: "{{ role_path }}/files/kustomize/base/environment/kubernetes-labels-patch.yml"
+    owner: "{{ ace_box_user }}"
+    group: "{{ ace_box_user }}"
+    mode: '0644'
+
+- name: Deploy Kubernetes manifests
+  include_tasks: deploy_kubernetes_manifests.yml
+  when: easytrade_deploy 
+
+- name: Add dashboard links
+  include_tasks: add-dashboard-links.yml
